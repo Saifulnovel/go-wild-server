@@ -6,10 +6,10 @@ const app = express();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const port = process.env.PORT || 5000;
 
-
+//https:y-coral-gamma.vercel.app/photos
 // middleware
 
-app.use(cors());
+ app.use(cors());
 app.use(express.json());
 
 
@@ -27,7 +27,9 @@ async function run(){
             const query = {};
             const cursor = photoCollection.find(query);
             const photos = await cursor.toArray();
-            res.send(photos)
+            const count = await photoCollection.estimatedDocumentCount()
+
+            res.send({count, photos})
         })
     }
     finally{
