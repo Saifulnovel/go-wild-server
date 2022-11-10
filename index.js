@@ -38,7 +38,7 @@ async function run(){
             const result = await photoCollection.insertOne(newService)
             res.json(result)
         })
-        app.post("/photos", async (req, res) => {
+        app.get("/photos/:id", async (req, res) => {
             const id =req.params.id
             const query = { _id: ObjectId(id) }
             const result = await photoCollection.findOne(query)
@@ -47,7 +47,24 @@ async function run(){
           res.json(result);
         });
 
-      
+      app.put("/photos/:id", async (req, res) => {
+        const id = req.params.id;
+        const update = req.body;
+        const filter = { _id: ObjectId(id) };
+        const option = { upsert: true };
+        const updateService = {
+          $set: {
+            review: update.review,
+          },
+        };
+
+        const result = await photoCollection.updateOne(
+          filter,
+          updateService,
+          option
+        );
+        res.json(result);
+      });
 
       
     }
@@ -61,24 +78,7 @@ app.get('/', (req, res) => {
     res.send('get wild server is running')
 })
 
-  app.put("/photos/:id", async (req, res) => {
-    const id = req.params.id;
-    const update = req.body;
-    const filter = { _id: ObjectId(id) };
-    const option = { upsert: true };
-    const updateService = {
-      $set: {
-        review: update.review,
-      },
-    };
-
-    const result = await photoCollection.updateOne(
-      filter,
-      updateService,
-      option
-    );
-    res.json(result);
-  });
+  
 
 app.listen(port, () => {
     console.log(` wild server running on port: ${port}`);
