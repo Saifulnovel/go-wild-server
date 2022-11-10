@@ -33,6 +33,18 @@ async function run(){
             res.send({count,limit, photos})
         })
 
+        app.post('/photos', async (req, res) => {
+            const newService = req.body 
+            const result = await photoCollection.insertOne(newService)
+            res.json(result)
+        })
+        app.post("/photos", async (req, res) => {
+            const id =req.params.id
+            
+            
+          res.json(result);
+        });
+
       
     }
     finally{
