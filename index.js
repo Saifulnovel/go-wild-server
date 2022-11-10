@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
 
 //https:y-coral-gamma.vercel.app/photos
@@ -40,10 +40,14 @@ async function run(){
         })
         app.post("/photos", async (req, res) => {
             const id =req.params.id
-            
+            const query = { _id: ObjectId(id) }
+            const result = await photoCollection.findOne(query)
+
             
           res.json(result);
         });
+
+      
 
       
     }
@@ -56,14 +60,7 @@ async function run(){
 app.get('/', (req, res) => {
     res.send('get wild server is running')
 })
-// const photoCollection = client.db("goWild").collection("photos");
-//   app.get("/sorted", async (req, res) => {
-//     const query = {};
-//     // const limit = req.query.limit || 3;
-//     const cursor = photoCollection.find(query);
-//     const sorted = await cursor.toArray();
-//     console.log(req.query);
-//   });
+
 
 app.listen(port, () => {
     console.log(` wild server running on port: ${port}`);
