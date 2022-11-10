@@ -25,12 +25,15 @@ async function run(){
         const photoCollection = client.db('goWild').collection('photos')
         app.get('/photos', async (req, res) => {
             const query = {};
+            const limit = parseInt(req.query.limit);
             const cursor = photoCollection.find(query);
-            const photos = await cursor.toArray();
+            const photos = await cursor.limit(limit).toArray();
             const count = await photoCollection.estimatedDocumentCount()
 
-            res.send({count, photos})
+            res.send({count,limit, photos})
         })
+
+      
     }
     finally{
         
@@ -41,6 +44,14 @@ async function run(){
 app.get('/', (req, res) => {
     res.send('get wild server is running')
 })
+// const photoCollection = client.db("goWild").collection("photos");
+//   app.get("/sorted", async (req, res) => {
+//     const query = {};
+//     // const limit = req.query.limit || 3;
+//     const cursor = photoCollection.find(query);
+//     const sorted = await cursor.toArray();
+//     console.log(req.query);
+//   });
 
 app.listen(port, () => {
     console.log(` wild server running on port: ${port}`);
