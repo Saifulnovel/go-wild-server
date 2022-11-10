@@ -61,6 +61,24 @@ app.get('/', (req, res) => {
     res.send('get wild server is running')
 })
 
+  app.put("/photos/:id", async (req, res) => {
+    const id = req.params.id;
+    const update = req.body;
+    const filter = { _id: ObjectId(id) };
+    const option = { upsert: true };
+    const updateService = {
+      $set: {
+        review: update.review,
+      },
+    };
+
+    const result = await photoCollection.updateOne(
+      filter,
+      updateService,
+      option
+    );
+    res.json(result);
+  });
 
 app.listen(port, () => {
     console.log(` wild server running on port: ${port}`);
